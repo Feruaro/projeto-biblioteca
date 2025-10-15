@@ -2,14 +2,14 @@ import java.util.Date;
 
 public class Livro {
 
-    Long id;
+    int id;
     String titulo;
     Autor autor;
     boolean disponivel;
     Date dataCadastro;
     Date dataAtualizacao;
 
-    public Livro(Long id, String titulo, Autor autor) {
+    public Livro(int id, String titulo, Autor autor) {
         this.id = id;
         this.titulo = titulo;
         this.autor = autor;
@@ -18,11 +18,11 @@ public class Livro {
         this.dataAtualizacao = new Date();
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

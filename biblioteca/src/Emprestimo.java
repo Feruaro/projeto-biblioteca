@@ -2,13 +2,13 @@ import java.util.Date;
 
 public class Emprestimo {
 
-    String id;
+    int id;
     Livro livro;
     String nomeCliente;
     Date dataEmprestimo;
     Date dataDevolucao;
 
-    public Emprestimo(String id, Livro livro, String nomeCliente) {
+    public Emprestimo(int id, Livro livro, String nomeCliente) {
         this.id = id;
         this.livro = livro;
         this.nomeCliente = nomeCliente;
@@ -16,11 +16,11 @@ public class Emprestimo {
         this.dataDevolucao = null;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -54,5 +54,15 @@ public class Emprestimo {
 
     public void setDataDevolucao(Date dataDevolucao) {
         this.dataDevolucao = dataDevolucao;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d%nLivro: %s%nCliente: %s%nData Empréstimo: %s%nData Devolução: %s",
+                this.id,
+                this.livro.getTitulo(),
+                this.nomeCliente,
+                this.dataEmprestimo,
+                this.dataDevolucao != null ? this.dataDevolucao : "Não devolvido");
     }
 }
