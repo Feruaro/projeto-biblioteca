@@ -28,10 +28,6 @@ public class Biblioteca {
             }
         }
 
-        System.out.print("Id do Autor: ");
-        int idAutor = scanner.nextInt();
-        scanner.nextLine();
-
         System.out.print("Nome do Autor: ");
         String nomeAutor = scanner.nextLine();
 
@@ -40,13 +36,75 @@ public class Biblioteca {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = sdf.parse(dateStr);
 
+        int idAutor = buscarIdAutor(nomeAutor);
+
         Autor autor = new Autor(idAutor, nomeAutor, date);
-        this.autores.add(autor);
+
+        if (idAutor > this.autores.size()) this.autores.add(autor);
 
         Livro novoLivro = new Livro(idLivro, tituloLivro, autor);
         this.livros.add(novoLivro);
 
         System.out.printf("\n✅ Livro cadastrado com sucesso: %n%s%n", novoLivro.toString());
+    }
+
+    private int buscarIdAutor(String nomeAutor) {
+        for (Autor autor : this.autores) {
+            if (Objects.equals(autor.getNome(), nomeAutor)) {
+                return autor.getId();
+            }
+        }
+
+        return this.autores.size() + 1;
+    }
+
+    public void pesquisarLivro(Scanner scanner) {
+        System.out.print("Escolha a opção que deseja pesquisar: ");
+        System.out.println("\n1. Por Id");
+        System.out.println("2. Por Título");
+        System.out.println("3. Por nome do Autor");
+        System.out.print("Opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Livro> livrosPesquisado = new ArrayList<>();
+
+        switch (opcao) {
+            case 1 -> livrosPesquisado = pesquisarLivroPorId(scanner);
+            case 2 -> livrosPesquisado = pesquisarLivroPorTitulo(scanner);
+            case 3 -> livrosPesquisado = pesquisarLivroPorNomeAutor(scanner);
+            default -> System.out.println("\n❌ Opção inválida. Operação cancelada.");
+        }
+
+        if (livrosPesquisado.isEmpty()) {
+            System.out.println("\n❌ Livro não encontrado.");
+            return;
+        }
+
+        System.out.println("\n✅ Livro(s) encontrado(s):");
+        livrosPesquisado.forEach(livro -> System.out.println(livro.toString()));
+    }
+
+    private List<Livro> pesquisarLivroPorId(Scanner scanner) {
+        System.out.print("Id do livro: ");
+        int idLivro = scanner.nextInt();
+        scanner.nextLine();
+
+        return this.livros.stream().filter(l -> Objects.equals(l.getId(), idLivro)).toList();
+    }
+
+    private List<Livro> pesquisarLivroPorTitulo(Scanner scanner) {
+        System.out.print("Título do livro: ");
+        String titulo = scanner.nextLine();
+
+        return this.livros.stream().filter(l -> Objects.equals(l.getTitulo(), titulo)).toList();
+    }
+
+    private List<Livro> pesquisarLivroPorNomeAutor(Scanner scanner) {
+        System.out.print("Nome do autor: ");
+        String nomeAutor = scanner.nextLine();
+
+        return this.livros.stream().filter(l -> Objects.equals(l.getAutor().getNome(), nomeAutor)).toList();
     }
 
     public void excluirLivro(Scanner scanner) {
@@ -83,7 +141,7 @@ public class Biblioteca {
             listarAcervo();
         }
 
-        System.out.print("Id do livro a ser emprestado: ");
+        System.out.print("\nId do livro a ser emprestado: ");
         int idLivro = scanner.nextInt();
         scanner.nextLine();
 
@@ -100,6 +158,7 @@ public class Biblioteca {
                 Emprestimo emprestimo = new Emprestimo(this.emprestimos.size() + 1, livro, nomeCliente);
                 this.emprestimos.add(emprestimo);
                 livro.setDisponivel(false);
+                livro.setDataAtualizacao(new Date());
 
                 System.out.printf("\n✅ Livro emprestado com sucesso: %n%s%n", emprestimo.toString());
                 return;
@@ -112,10 +171,10 @@ public class Biblioteca {
         String listar = scanner.nextLine().toUpperCase();
 
         if (listar.equals("S")) {
-            listarEmprestimosAtivos();
+            listarEmprestimos(true);
         }
 
-        System.out.print("Id do empréstimo a ser devolvido: ");
+        System.out.print("\nId do empréstimo a ser devolvido: ");
         int idEmprestimo = scanner.nextInt();
         scanner.nextLine();
 
@@ -128,6 +187,7 @@ public class Biblioteca {
 
                 emprestimo.setDataDevolucao(new Date());
                 emprestimo.getLivro().setDisponivel(true);
+                emprestimo.getLivro().setDataAtualizacao(new Date());
 
                 System.out.printf("\n✅ Livro devolvido com sucesso: %n%s%n", emprestimo.toString());
                 return;
@@ -137,7 +197,7 @@ public class Biblioteca {
         System.out.println("\n❌ Empréstimo não encontrado. Operação cancelada.");
     }
 
-    public void listarEmprestimosAtivos() {
+    public void listarEmprestimos(boolean ativos) {
         if (this.emprestimos.isEmpty()) {
             System.out.println("\n❌ Nenhum empréstimo ativo registrado na biblioteca.");
             return;
@@ -145,7 +205,7 @@ public class Biblioteca {
 
         System.out.println("===== EMPRÉSTIMOS DA BIBLIOTECA =====");
         this.emprestimos.forEach(emprestimo -> {
-            if (emprestimo.getDataDevolucao() == null) {
+            if (!ativos || emprestimo.getDataDevolucao() == null) {
                 System.out.println(emprestimo.toString());
             }
         });

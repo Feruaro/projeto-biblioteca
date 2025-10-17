@@ -21,11 +21,11 @@ public class Main {
                 System.out.println("\n-------------------------------\n");
                 switch (opcao) {
                     case 1 -> biblioteca.cadastrarLivro(scanner);
-                    case 2 -> System.out.println("❌ Opção inválida. Tente novamente.");
+                    case 2 -> biblioteca.pesquisarLivro(scanner);
                     case 3 -> biblioteca.excluirLivro(scanner);
                     case 4 -> biblioteca.listarAcervo();
                     case 5 -> biblioteca.emprestarLivro(scanner);
-                    case 6 -> biblioteca.listarEmprestimosAtivos();
+                    case 6 -> biblioteca.listarEmprestimos(false);
                     case 7 -> biblioteca.devolverLivro(scanner);
                     case OPCAO_SAIR -> System.out.println("✅ Obrigado por usar o sistema da Biblioteca!");
                     default -> System.out.println("❌ Opção inválida. Tente novamente.");
@@ -51,7 +51,7 @@ public class Main {
         System.out.println("3. Excluir livro");
         System.out.println("4. Listar acervo");
         System.out.println("5. Emprestar livro");
-        System.out.println("6. Listar empréstimos ativos");
+        System.out.println("6. Listar empréstimos");
         System.out.println("7. Devolver livro");
         System.out.println("8. Sair");
         System.out.print("Escolha uma opção: ");

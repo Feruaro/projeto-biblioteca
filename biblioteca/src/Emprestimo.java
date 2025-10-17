@@ -58,7 +58,7 @@ public class Emprestimo {
 
     @Override
     public String toString() {
-        return String.format("ID: %d%nLivro: %s%nCliente: %s%nData Empréstimo: %s%nData Devolução: %s",
+        return String.format("ID: %d | Livro: %s | Cliente: %s | Data Empréstimo: %s | Data Devolução: %s",
                 this.id,
                 this.livro.getTitulo(),
                 this.nomeCliente,
